@@ -17,7 +17,6 @@ Animation corresponding to Figure 1 in the intention article. A small glider in 
 {:style="text-align:center;"}
 ![Orbium glider animation with variable dt](assets/dt_orbium.gif)
 Animation corresponding to Figure 2 in the intention article. A small Lenia glider, _Orbium_, becomes unstable with too large, but not too small, step size.  
-{
 {:style="text-align:center;"}
 
 
@@ -26,7 +25,6 @@ Animation corresponding to Figure 2 in the intention article. A small Lenia glid
 {:style="text-align:center;"}
 ![Scutium glider animation with variable dtype](assets/dtypes_scutium.gif)
 Animation corresponding to Figure 3 in the intention article. A small glider in the _Scutium gravidus_ set of Lenia CA rules becomes unstable when using the higher-precision `torch.float64`double data type.  
-{
 {:style="text-align:center;"}
 
 ### Figure 4 animation
