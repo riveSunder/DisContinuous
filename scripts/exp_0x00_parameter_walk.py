@@ -2,7 +2,7 @@ import os
 
 import pdb; pdb.set_trace()
 script_path = os.path.split(os.path.abspath(__file__))[0]
-log_directory = os.path.join(script_path, "logs", "exp_0x00")
+log_directory = os.path.join(script_path, "..", "logs", "exp_0x00")
 log_filepath_nca = os.path.join(log_directory, "exp_0x00_nca_save_image_log.txt")
 log_filepath_cca = os.path.join(log_directory, "exp_0x00_cca_save_image_log.txt")
 
