@@ -183,6 +183,8 @@ def walk(**kwargs):
             ca.change_kernel_radius(kr)
             ca.to_device(my_device)
             ca.no_grad()
+            #turn off dropout!
+            ca.eval()
 
 
             # set up and scale pattern
