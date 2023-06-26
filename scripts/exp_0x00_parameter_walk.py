@@ -2,8 +2,8 @@ import os
 
 script_path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
 log_directory = os.path.join(script_path, "logs", "exp_0x00")
-log_filepath_nca = os.path.join(log_directory, "exp_0x00_nca_save_image_log.txt")
-log_filepath_cca = os.path.join(log_directory, "exp_0x00_cca_save_image_log.txt")
+log_filepath_nca = os.path.join(log_directory, "exp_0x00_nca_parameter_walk_log.txt")
+log_filepath_cca = os.path.join(log_directory, "exp_0x00_cca_parameter_walk_log.txt")
 
 if os.path.exists(log_directory):
     pass
