@@ -346,6 +346,8 @@ if __name__ == "__main__":
 
     parser.add_argument("-a", "--alpha", type=float, default=0.75,\
             help="exponential averaging variable R[0.0, 1.0], default=0.75")
+    parser.add_argument("-b", "--gain_bounds", type=float, default=[0.75, 1.25], nargs="+",\
+            help="gain limits before assuming dissolution")
     parser.add_argument("-c", "--system_type", type=str, default="CCA", \
             help="complex system, options: CCA, NCA, RxnDfn (default CCA)")
     parser.add_argument("-d", "--device", type=str, \
