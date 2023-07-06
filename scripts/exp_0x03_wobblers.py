@@ -23,7 +23,7 @@ my_cmd_nca = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-s {save_images} -m {max_steps} -d {device} -k {kernel_radius_bounds} > {log_filepath_nca}"
 
 my_cmd_nca_audit = f"python -m disco.walk -l 900 -c {system_type} "\
-        f"-g {glider_patterns}"\
+        f"-g {glider_patterns} -b 0.6 1.4 "\
         f"-s 1 -m {max_steps} -d {device} -k {kernel_radius_bounds} > {log_filepath_nca}_images"
 
 time_limit = 7200
@@ -32,14 +32,14 @@ save_images = "0"
 max_steps = "1024"
 device = "cuda"
 kernel_radius_bounds = "1 111"
-glider_patterns = f"s613_fast_wobble_glider000 s643_s643_3wide_wobble_glider000 geminium2_wobble_glider "
+glider_patterns = f"s613_fast_wobble_glider000 s643_s643_3wide_wobble_glider000 geminium2_wobble_glider000 "
 
 my_cmd_cca = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device} -k {kernel_radius_bounds} > {log_filepath_cca}"
 
 my_cmd_cca_audit = f"python -m disco.walk -l 900 -c {system_type} "\
-        f"-g {glider_patterns}"\
+        f"-g {glider_patterns} -b 0.6 1.4 "\
         f"-s 1 -m {max_steps} -d {device} -k {kernel_radius_bounds} > {log_filepath_cca}_images"
 
 os.system(my_cmd_cca)
