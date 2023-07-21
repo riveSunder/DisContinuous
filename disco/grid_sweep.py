@@ -122,8 +122,8 @@ def sweep(**kwargs):
 
                     pattern_sum = grid.sum()
 
-                    ca.change_kernel_radius(radius=radius)
-                    ca.dt = dt
+                    ca.set_kernel_radius(radius=radius)
+                    ca.set_dt(dt)
 
                     ca.to_device(my_device)
                     grid = grid.to(my_device)

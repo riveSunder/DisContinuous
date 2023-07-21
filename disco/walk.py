@@ -179,8 +179,9 @@ def walk(**kwargs):
             native_radius = native_config["neighborhood_kernel_config"]["radius"]
 
             # set temporal step size and kernel radius
-            ca.dt = dt
-            ca.change_kernel_radius(kr)
+            ca.set_dt(dt)
+
+            ca.set_kernel_radius(kr)
             ca.to_device(my_device)
             ca.no_grad()
             #turn off dropout!
@@ -240,7 +241,7 @@ def walk(**kwargs):
                     print(f"     pattern: {pattern_name}, dt {dt:.4f}, "\
                             f"radius {kr}, {bit}-bit precision")
                     print(f"     kr_scale: {kr_scale:.2f}, dt_scale: {dt_scale:.4f}")
-                    print(f"     t_count: {ca.t_count:.3f}")
+                    print(f"     t_count: {np.array(ca.t_count):.3f}")
                     print(relative_correlation)
                     break
                 elif step == (max_steps-1):
@@ -248,7 +249,7 @@ def walk(**kwargs):
                     print(f"     pattern: {pattern_name}, dt {dt:.4f}, "\
                             f"radius {kr}, {bit}-bit precision")
                     print(f"     kr_scale: {kr_scale:.2f}, dt_scale: {dt_scale:.4f}")
-                    print(f"     t_count: {ca.t_count:.3f}")
+                    print(f"     t_count: {np.array(ca.t_count):.3f}")
 
 
             if save_images:
@@ -258,7 +259,7 @@ def walk(**kwargs):
                 image_fn = f"final_grid_{pattern_name}_step{step}_"\
                         f"kr{kr_string}_dt{dt_string}_fp{fp_string}.png"
                 save_image_path = os.path.join(images_folder, image_fn)
-                image_to_save = np.array(255*grid.squeeze().cpu().numpy(), dtype=np.uint8)
+                image_to_save = np.array(255*grid[0,0].squeeze().cpu().numpy(), dtype=np.uint8)
                 print(f"kr: {kr}, grid size = {grid.shape}")
                 sio.imsave(save_image_path, image_to_save)
 
