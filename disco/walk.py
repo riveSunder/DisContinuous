@@ -199,13 +199,12 @@ def walk(**kwargs):
                     anti_aliasing=use_anti_aliasing)
 
             # set up grid
-            grid_size = min([min([int(10 * kr), kr + max(scaled_pattern.shape)]), 1024])
+            grid_size = min([min([int(128 * kr), 64 + kr + max(scaled_pattern.shape)]), 1024])
             mid_grid = 0 #grid_size // 2 
 
-            grid = torch.zeros(1, 1, grid_size, grid_size)
+            grid = torch.zeros(1, ca.external_channels, grid_size, grid_size)
 
             crop_x, crop_y = scaled_pattern.shape[-2], scaled_pattern.shape[-1]
-
 
             # send pattern to the intended fp precision dtype
             scaled_pattern = torch.tensor(scaled_pattern, dtype=torch.get_default_dtype())
