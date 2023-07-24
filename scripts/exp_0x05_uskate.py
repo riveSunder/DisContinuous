@@ -12,7 +12,7 @@ else:
 
 time_limit = 7200
 system_type = "RxnDfn"
-save_images = "0"
+save_images = "1"
 max_steps = "131072"
 device = "cuda"
 kernel_radius_bounds = "1 1"
@@ -24,14 +24,5 @@ my_cmd_rxn = f"python -m disco.rxn_dfn_walk -l {time_limit} -c {system_type} "\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
         f"-y db738125121545cfe58e5e62db7b51634c36350f "\
         f"-k {kernel_radius_bounds} > {log_filepath_rxn}"
-
-my_cmd_rxn_audit = f"python -m disco.rxn_dfn_walk -l 900 -c {system_type} "\
-        f"-g {glider_patterns} -b 0.6 1.4 "\
-        f"-s 1 -m {max_steps} -d {device} -x {dx_bounds} "\
-        f"-y db738125121545cfe58e5e62db7b51634c36350f "\
-        f"-k {kernel_radius_bounds} > {log_filepath_rxn_audit}"
-
-print("Now running sims and saving final images")
-os.system(my_cmd_rxn_audit)
 
 os.system(my_cmd_rxn)
