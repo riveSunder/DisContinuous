@@ -203,8 +203,8 @@ def rxn_dfn_walk(**kwargs):
         last_persistence = 0
         persistence = 1
 
-        results_list = ["uuid", "persistence", "max_persistence", \
-                "bit", "dt", "kr", "dx", "image_filename"]
+        results_list = [["uuid", "persistence", "max_persistence", \
+                "bit", "dt", "kr", "dx", "image_filename"]]
         evaluation_count = 0
 
         while elapsed <= time_limit and evaluation_count <= number_evaluations:
@@ -498,6 +498,7 @@ def rxn_dfn_walk(**kwargs):
         log_results["results_file"] = results_path 
 
         print(f"saving results to {results_path}")
+        import pdb; pdb.set_trace()
         np.save(results_path, np.array(results_list)) 
 
         print(f"saving metadata to {log_results_path}")
