@@ -498,7 +498,6 @@ def rxn_dfn_walk(**kwargs):
         log_results["results_file"] = results_path 
 
         print(f"saving results to {results_path}")
-        import pdb; pdb.set_trace()
         np.save(results_path, np.array(results_list)) 
 
         print(f"saving metadata to {log_results_path}")
