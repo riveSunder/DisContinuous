@@ -1,7 +1,7 @@
 import os
 
 script_path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
-log_directory = os.path.join(script_path, "logs", "exp_0x06_dry_run")
+log_directory = os.path.join(script_path, "logs", "exp_0x06_full")
 log_filepath_rxn = os.path.join(log_directory, "exp_0x0r06_rxn.txt")
 
 if os.path.exists(log_directory):
