@@ -203,8 +203,8 @@ def rxn_dfn_walk(**kwargs):
         last_persistence = 0
         persistence = 1
 
-        results_list = [["uuid", "persistence", "max_persistence", \
-                "bit", "dt", "kr", "dx", "image_filename"]]
+        results_list = ["uuid", "persistence", "max_persistence", \
+                "bit", "dt", "kr", "dx", "image_filename"]
         evaluation_count = 0
 
         while elapsed <= time_limit and evaluation_count <= number_evaluations:
@@ -254,7 +254,7 @@ def rxn_dfn_walk(**kwargs):
                         f"using non-standard grid size {grid_size}")
             else:
                 #standard grid size
-                grid_size = 256
+                grid_size = 256 
 
             mid_grid = (grid_size - max(scaled_pattern.shape)) // 2 
 
@@ -276,12 +276,12 @@ def rxn_dfn_walk(**kwargs):
             starting_correlation = starting_correlation / starting_correlation.std()
 
             starting_grid = 1.0 * grid
-            starting_pattern = (1.0 * scaled_pattern).to(my_device)
+            starting_pattern = 1.0 * scaled_pattern
 
             if system_type == "RxnDfn":
                 setup_steps = 1000
 
-                slope_dt = (ca.get_dt() - dt)  / setup_steps
+                slope_dt = (ca.get_dt() - dt) / setup_steps
                 slope_dx = (ca.get_dx() - dx) / setup_steps
 
 
@@ -305,20 +305,22 @@ def rxn_dfn_walk(**kwargs):
 
             t1 = time.time()
             failed = False
-            for my_step in range(max_steps):
+            for step in range(max_steps):
 
                 grid = ca(grid)
 
-                if use_correlation and (my_step % (max_steps // 32) == 0 \
-                        or my_step == max_steps -1):
+                if use_correlation and step % (max_steps // 32) == 0:
 
                     padded_g = F.pad(grid[0:1,0:1], (grid_size,0, grid_size, 0), \
                             mode="constant", value=starting_grid[0,0,-1,-1])
 
-                    padded_s = 1.0 * starting_pattern[0:1,0:1] #starting_grid[0:1,0:1] 
+                    padded_s = 1.0 * starting_grid[0:1,0:1] 
 
                     padded_g -= padded_g.mean()
                     padded_s -= padded_s.mean()
+
+                    #padded_g /= padded_g.max() + 1e-6
+                    #padded_s /= padded_s.max() + 1e-6
 
                     correlate = F.conv2d(padded_g, padded_s[0:1,0:1], padding="same")
                     autocorrelate = F.conv2d(padded_g, padded_g, padding="same")
@@ -327,17 +329,13 @@ def rxn_dfn_walk(**kwargs):
 
                     corr_autocorr = correlate.max() / autocorrelate.max()
 
-                    print(f"step {my_step} \n"\
-                            f"correlation.max / autocorrelation.max {corr_autocorr:.4f}")
+                    print(f"correlation.max / autocorrelation.max {corr_autocorr:.4f}")
 
-                    print(f" correlation max / correlation std. dev. with grid_0 {c_max.item():3f}")
+                    print(f" correlation with grid_0 {c_max.item():3f}")
 
-                    if corr_autocorr < min_correlation:
+                    if corr_autocorr < .90:
                         print("failed correlation test")
                         failed = True
-
-                elif use_correlation:
-                    pass
                 else:
                     corr_autocorr = "na"
                     c_max = "na"
@@ -350,6 +348,9 @@ def rxn_dfn_walk(**kwargs):
                         failed = True
                 else:
                     gain = "na"
+                if gain == 0.0:
+                    import pdb; pdb.set_trace()
+
 
                 if use_cell_value:
                     if grid[0,0].mean() <= min_cell_value or grid[0,0].mean() >= max_cell_value:
@@ -393,9 +394,9 @@ def rxn_dfn_walk(**kwargs):
 
             
             if failed:
-                print(f"\nloss of pattern homeostasis at step {my_step} assumed")
+                print(f"\nloss of pattern homeostasis at step {step} assumed")
 
-            print(f"\n{pattern_name} persisted up to to step {my_step} uuid: {my_uuid}")
+            print(f"\n{pattern_name} persisted up to to step {step} uuid: {my_uuid}")
 
             print(f"     gain: {gain_str}")
             print(f"     normalized correlation: {autocorr_str}")
@@ -403,20 +404,16 @@ def rxn_dfn_walk(**kwargs):
             print(f"     t_count: {np.array(ca.t_count):.3f}")
 
             print(f"     kr_scale: {kr_scale:.2f}, dt_scale: {dt_scale:.4f}")
-            print(f"elapsed {just_elapsed:.3f} s {(my_step / just_elapsed):.3f} steps/s")
+            print(f"elapsed {just_elapsed:.3f} s {(step / just_elapsed):.3f} steps/s")
 
             if save_images:
 
-                image_fn = f"final_grid_{pattern_name}_step{my_step}_"\
+                image_fn = f"final_grid_{pattern_name}_step{step}_"\
                         f"kr{kr_string}_dt{dt_string}_fp{fp_string}_dx{dx_str}_"\
                         f"autocorr{autocorr_str}_corr{corr_str}_gain{gain_str}.png"
 
                 save_image_path = os.path.join(images_folder, image_fn)
-                dgrid = starting_grid - grid
-                dgrid = dgrid - dgrid.min()
-                dgrid = (dgrid / dgrid.max())#.cpu()
-
-                image_grid = torch.cat([starting_grid, grid, dgrid], -1)
+                image_grid = torch.cat([starting_grid, grid], -1)
                 print(starting_grid[0,0].mean(), grid[0,0].mean())
                 image_to_save = np.array(255*image_grid[0,0].squeeze().cpu().numpy(), dtype=np.uint8)
                 print(f"kr: {kr}, grid size = {grid.shape}")
@@ -427,7 +424,7 @@ def rxn_dfn_walk(**kwargs):
 
 
             # update random walk scale based on how different persistence was
-            persistence = my_step
+            persistence = step
 
             m = (persistence + last_persistence) / (1 + 2 * np.abs(persistence - last_persistence))
             scale_modifier = 1. + (m-1)*2
