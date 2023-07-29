@@ -12,7 +12,7 @@ else:
 # u-skate patterns
 glider_patterns = f"uskate_glider001 uskate_daedalus001 uskate_berrycup001 "
 
-time_limit = 7200
+time_limit = 14400
 system_type = "RxnDfn"
 save_images = "1"
 max_steps = "131072"
@@ -29,11 +29,12 @@ correlation_limits = "0.8 5.0"
 my_cmd_rxn = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--correlation_limits {correlation_limits} "\
         f"-k {kernel_radius_bounds} > {log_filepath_rxn}"
 
 # patterns from Lenia
+time_limit = 7200
 log_filepath_lenia = os.path.join(log_directory, "exp_0x0r06_lenia.txt")
 glider_patterns = f" orbium_orbium000 geminium_hydrogeminium_natans000 scutium_gravidus_single000 "\
         f" triscutium_solidus_triscutium000 geminium2_wobble_glider000 "
@@ -48,12 +49,13 @@ gain_limits = "0.30"
 my_cmd_lenia = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--gain_limits {gain_limits} " \
         f"-k {kernel_radius_bounds} > {log_filepath_lenia}"
 
 log_filepath_smoothlife = os.path.join(log_directory, "exp_0x0r06_smoothlife.txt")
 glider_patterns = f" smoothlife_single_glider000 "
+time_limit = 7200
 
 # gliders in SmoothLife tend to rotate a bit, so gain in mean cell value is used instead of correlation, 
 gain_limits = "0.30"
@@ -61,13 +63,14 @@ gain_limits = "0.30"
 my_cmd_smoothlife = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--gain_limits {gain_limits} " \
         f"-k {kernel_radius_bounds} > {log_filepath_smoothlife}"
 
 # Experiment applied to gliders from Conway's Game of Life
 log_filepath_gol = os.path.join(log_directory, "exp_0x0r06_game_of_life.txt")
 glider_patterns = f" gol_25P3H1V0_1000 gol_reflex_glider000 gol_small_spaceship000 "
+time_limit = 3600
 
 # gliders in Life mostly maintain orientation, but can take different shapes from step to step
 # therefore, gain is used as the dissolution threshold
@@ -77,7 +80,7 @@ gain_limits = "0.30"
 my_cmd_gol = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--gain_limits {gain_limits} " \
         f"-k {kernel_radius_bounds} > {log_filepath_gol}"
 
@@ -88,11 +91,12 @@ glider_patterns = f" s11_config_evolved_ca_slow_glider000 s613_s613_frog000 s643
 # gliders in Life mostly maintain orientation, but can take different shapes from step to step
 # therefore, gain is used as the dissolution threshold
 gain_limits = "0.30"
+time_limit = 7200
 
 my_cmd_glaberish = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--gain_limits {gain_limits} " \
         f"-k {kernel_radius_bounds} > {log_filepath_glaberish}"
 
@@ -103,6 +107,7 @@ system_type = "NCA"
 max_steps = "4096"
 device = "cuda"
 kernel_radius_bounds = "1 101"
+time_limit = 14400
 
 # NCA gliders exist under rules that are essentially (and poorly) cloned from Lenia and glaberish
 gain_limits = "0.30"
@@ -110,7 +115,7 @@ gain_limits = "0.30"
 my_cmd_nca = f"python -m disco.walk -l {time_limit} -c {system_type} "\
         f"-g {glider_patterns}"\
         f"-s {save_images} -m {max_steps} -d {device}  -x {dx_bounds} "\
-        f"-y 5c5cf4861bfa955477694f887fef2a6e1905ffdd "\
+        f"-y a8f88c459999e23a3fabc8c8ffa3f27b4173a13b "\
         f"--gain_limits {gain_limits} " \
         f"-k {kernel_radius_bounds} > {log_filepath_nca}"
 
