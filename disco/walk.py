@@ -296,9 +296,9 @@ def rxn_dfn_walk(**kwargs):
                     ca.set_dx(new_dx)
                     ca.set_dt(new_dt)
 
-                # set temporal step size and kernel radius
-                ca.set_dt(dt)
-                ca.set_dx(dx)
+            # set temporal step size and kernel radius
+            ca.set_dt(dt)
+            ca.set_dx(dx)
             ca.set_kernel_radius(kr)
 
             pattern_sum = grid.cpu().sum()
@@ -449,8 +449,8 @@ def rxn_dfn_walk(**kwargs):
 
             elapsed = time.time() - t0
 
-            results_list.append([my_uuid, persistence, max_steps, save_image_path, \
-                    bit, dt, kr, dx])
+            results_list.append([my_uuid, persistence, max_steps, \
+                    bit, dt, kr, dx, save_image_path])
 
             kr_shift = kr_scale * np.random.randn()
             dt_shift = dt_scale * np.random.randn()
@@ -472,8 +472,6 @@ def rxn_dfn_walk(**kwargs):
             if system_type == "RxnDfn":
                 if np.isclose(dx, max_dx, rtol=0.001) and np.sign(dx_shift) > 0:
                     dx_shift *= -1.
-                    dx = dx + dx_shift
-                    dx = min([max([dx, min_dx]), max_dx])
                 elif np.isclose(dx, min_dx, rtol=0.001) and np.sign(dx_shift) < 0:
                     dx_shift *= -1.
             else:
@@ -485,6 +483,9 @@ def rxn_dfn_walk(**kwargs):
             dt = dt + dt_shift
             dt = min([max([dt, min_dt]), max_dt])
 
+            if system_type == "RxnDfn":
+                dx = dx + dx_shift
+                dx = min([max([dx, min_dx]), max_dx])
 
             evaluation_count +=1 
 
@@ -582,6 +583,7 @@ if __name__ == "__main__":
 
             sorted_args.sort()
             entry_point.extend(sorted_args)
+
 
     kwargs["entry_point"] = entry_point
 
