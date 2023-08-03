@@ -238,7 +238,7 @@ def rxn_dfn_walk(**kwargs):
             while len(pattern.shape) < 4:
                 pattern = pattern[None,...]
 
-            if system_type == "RxnDfn":
+            if system_type == "RxnDfn" and min_dx != max_dx:
                 scaled_pattern = pattern
             else:
                 scaled_pattern = skimage.transform.rescale(pattern, \
@@ -278,7 +278,7 @@ def rxn_dfn_walk(**kwargs):
             starting_grid = 1.0 * grid
             starting_pattern = (1.0 * scaled_pattern).to(my_device)
 
-            if system_type == "RxnDfn":
+            if system_type == "RxnDfn" and min_dx != max_dx:
                 setup_steps = 1000
 
                 slope_dt = (ca.get_dt() - dt)  / setup_steps
@@ -298,7 +298,8 @@ def rxn_dfn_walk(**kwargs):
 
             # set temporal step size and kernel radius
             ca.set_dt(dt)
-            ca.set_dx(dx)
+            if min_dx != max_dx:
+                ca.set_dx(dx)
             ca.set_kernel_radius(kr)
 
             pattern_sum = grid.cpu().sum()
@@ -369,7 +370,7 @@ def rxn_dfn_walk(**kwargs):
             kr_string = f"{kr}"
             dt_string = f"{dt:.6f}".replace(".","_")
 
-            if system_type == "RxnDfn":
+            if system_type == "RxnDfn" and min_dx != max_dx:
                 dx_str = f"{dx:.6f}".replace(".","_")
             else:
                 dx_str = "na"
@@ -469,7 +470,7 @@ def rxn_dfn_walk(**kwargs):
             elif np.isclose(dt, min_dt, rtol=0.001) and np.sign(dt_shift) < 0:
                 dt_shift *= -1.
 
-            if system_type == "RxnDfn":
+            if system_type == "RxnDfn" and min_dx != max_dx:
                 if np.isclose(dx, max_dx, rtol=0.001) and np.sign(dx_shift) > 0:
                     dx_shift *= -1.
                 elif np.isclose(dx, min_dx, rtol=0.001) and np.sign(dx_shift) < 0:
@@ -483,7 +484,7 @@ def rxn_dfn_walk(**kwargs):
             dt = dt + dt_shift
             dt = min([max([dt, min_dt]), max_dt])
 
-            if system_type == "RxnDfn":
+            if system_type == "RxnDfn" and min_dx != max_dx:
                 dx = dx + dx_shift
                 dx = min([max([dx, min_dx]), max_dx])
 
