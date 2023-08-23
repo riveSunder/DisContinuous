@@ -306,11 +306,18 @@ def rxn_dfn_walk(**kwargs):
 
             t1 = time.time()
             failed = False
+            images = None
             for my_step in range(max_steps):
 
                 grid = ca(grid)
 
-                if use_correlation and (my_step % (max_steps // 32) == 0 \
+                if save_images and (my_step % (max_steps // 64) == 0):
+                    if images is None:
+                        images = 1. * grid
+                    else:
+                        images = torch.cat([images, 1.*grid], 0)
+
+                if use_correlation and (my_step % (max_steps // 16) == 0 \
                         or my_step == max_steps -1):
 
                     padded_g = F.pad(grid[0:1,0:1], (grid_size,0, grid_size, 0), \
@@ -333,7 +340,7 @@ def rxn_dfn_walk(**kwargs):
 
                     print(f" correlation max / correlation std. dev. with grid_0 {c_max.item():3f}")
 
-                    if corr_autocorr < min_correlation:
+                    if corr_autocorr < min_correlation or corr_autocorr > max_correlation:
                         print("failed correlation test")
                         failed = True
 
@@ -408,20 +415,40 @@ def rxn_dfn_walk(**kwargs):
 
             if save_images:
 
+                image_every = max_steps // 64
                 image_fn = f"final_grid_{pattern_name}_step{my_step}_"\
                         f"kr{kr_string}_dt{dt_string}_fp{fp_string}_dx{dx_str}_"\
+                        f"image_every{image_every}"\
                         f"autocorr{autocorr_str}_corr{corr_str}_gain{gain_str}.png"
 
                 save_image_path = os.path.join(images_folder, image_fn)
-                dgrid = starting_grid - grid
+
+                dgrid = starting_grid - images[0]
                 dgrid = dgrid - dgrid.min()
                 dgrid = (dgrid / dgrid.max())#.cpu()
 
-                image_grid = torch.cat([starting_grid, grid, dgrid], -1)
+                image_grid = torch.cat([starting_grid.squeeze()[0], \
+                        images[0].squeeze()[0], dgrid.squeeze()[0]], -1)
+                my_old_image = 1.0 * images[0].squeeze()[0]
+
+                for my_image in images[1:]:
+
+                    dgrid = my_old_image - my_image.squeeze()[0]
+                    dgrid = dgrid - dgrid.min()
+                    dgrid = (dgrid / dgrid.max())#.cpu()
+
+                    row_image_grid = torch.cat(\
+                            [my_old_image, my_image.squeeze()[0], dgrid], -1)
+                    image_grid = torch.cat([image_grid, row_image_grid], -2)
+
+                    my_old_image = 1.0 * my_image.squeeze()[0]
+
                 print(starting_grid[0,0].mean(), grid[0,0].mean())
-                image_to_save = np.array(255*image_grid[0,0].squeeze().cpu().numpy(), dtype=np.uint8)
+                image_to_save = np.array(255*image_grid.cpu().numpy(), dtype=np.uint8)
                 print(f"kr: {kr}, grid size = {grid.shape}")
                 sio.imsave(save_image_path, image_to_save)
+                tensor_fn = os.path.splitext(save_image_path)[0] + ".pt"
+                torch.save(images, tensor_fn)
             else:
                 save_image_path = "no_image"
 
